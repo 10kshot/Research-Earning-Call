@@ -1,0 +1,1045 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Counterparty Contradictions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root {
+    --bg: #F3F5F6;
+    --surface: #FFFFFF;
+    --ink: #15202A;
+    --muted: #56636E;
+    --rule: #D3DADF;
+    --sup: #0E6B6B;
+    --sup-soft: #E2EFEE;
+    --cus: #95570F;
+    --cus-soft: #F4EADC;
+    --flag: #B0283F;
+    --code-bg: #E9EDEF;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10161B;
+      --surface: #172028;
+      --ink: #E3E8EC;
+      --muted: #97A4AE;
+      --rule: #2B3741;
+      --sup: #5CC0BA;
+      --sup-soft: #15302F;
+      --cus: #E2A65E;
+      --cus-soft: #33271A;
+      --flag: #F07A8C;
+      --code-bg: #1C2730;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10161B;
+    --surface: #172028;
+    --ink: #E3E8EC;
+    --muted: #97A4AE;
+    --rule: #2B3741;
+    --sup: #5CC0BA;
+    --sup-soft: #15302F;
+    --cus: #E2A65E;
+    --cus-soft: #33271A;
+    --flag: #F07A8C;
+    --code-bg: #1C2730;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+  @media (max-width: 480px) { .page { padding: 36px 16px 72px; } }
+
+  /* Masthead */
+  .masthead {
+    display: grid;
+    gap: 14px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(30px, 4.2vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  h1 .s { color: var(--sup); }
+  h1 .c { color: var(--cus); }
+  .dek {
+    font-size: 19px;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    padding-top: 6px;
+  }
+  .toc a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .toc a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* Section grid: label rail + content */
+  section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: 16px;
+  }
+  section:last-of-type { border-bottom: 0; }
+  @media (min-width: 900px) {
+    section { grid-template-columns: 180px minmax(0, 1fr); }
+  }
+  .rail {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 6px;
+  }
+  .body { display: grid; gap: 18px; min-width: 0; }
+  .body > * { margin: 0; }
+  .prose { max-width: 68ch; display: grid; gap: 14px; }
+  h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.35;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h4 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 6px 0 0;
+  }
+  p { margin: 0; }
+  ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+  code, .mono { font-family: var(--mono); font-size: 0.86em; }
+  code {
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  /* Objective statement */
+  .objective {
+    font-size: 20px;
+    line-height: 1.55;
+    max-width: 64ch;
+    padding-left: 22px;
+    border-left: 3px solid var(--ink);
+  }
+  .copy-note {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Principles */
+  .principles {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 76ch;
+  }
+  .principles li {
+    display: grid;
+    gap: 2px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 16px;
+  }
+  .principles li:first-child { border-top: 0; padding-top: 0; }
+  .principles b {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  /* Exhibit: facing transcript excerpts */
+  .exhibit {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .exhibit-head {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+  }
+  .exhibit-head strong { color: var(--ink); }
+  .facing { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 720px) {
+    .facing { grid-template-columns: 1fr 1fr; }
+    .facing .side + .side { border-left: 1px solid var(--rule); }
+  }
+  .side {
+    padding: 18px;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    min-width: 0;
+  }
+  .side + .side { border-top: 1px solid var(--rule); }
+  @media (min-width: 720px) { .side + .side { border-top: 0; } }
+  .who {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    color: var(--muted);
+  }
+  .who b { font-weight: 500; }
+  .side.sup .who b { color: var(--sup); }
+  .side.cus .who b { color: var(--cus); }
+  .quote { font-size: 17px; line-height: 1.5; font-style: italic; }
+  .side.sup .quote mark { background: var(--sup-soft); color: inherit; padding: 0 2px; }
+  .side.cus .quote mark { background: var(--cus-soft); color: inherit; padding: 0 2px; }
+  .claim {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+  .verdict {
+    border-top: 1px solid var(--rule);
+    padding: 12px 18px;
+    font-family: var(--sans);
+    font-size: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--flag);
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 2px 10px;
+  }
+  .verdict span.k { color: var(--muted); }
+
+  /* Two measures */
+  .measures { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 720px) { .measures { grid-template-columns: 1fr 1fr; } }
+  .measure {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding-top: 14px;
+    border-top: 2px solid var(--ink);
+    min-width: 0;
+  }
+  .measure .tag { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .formula {
+    font-family: var(--mono);
+    font-size: 14px;
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Research questions */
+  .rqs { display: grid; gap: 20px; }
+  .rq {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 4px 12px;
+  }
+  .rq .id { font-family: var(--mono); font-size: 14px; font-weight: 500; padding-top: 2px; }
+  .rq .txt { display: grid; gap: 6px; max-width: 70ch; }
+  .rq .h { font-size: 15.5px; color: var(--muted); }
+  .rq .h b { font-family: var(--mono); font-weight: 500; font-size: 13px; color: var(--ink); }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 620px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  table.narrow { min-width: 520px; }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 14px 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  th {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  td:first-child { font-family: var(--sans); font-weight: 500; }
+  td.nw { white-space: nowrap; }
+  td code { white-space: nowrap; }
+  .same { color: var(--sup); font-family: var(--mono); font-size: 13px; }
+
+  /* Method steps */
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; counter-reset: step; }
+  .stage {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 30px 0 10px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+  .stage:first-child { padding-top: 0; }
+  .stage span { font-weight: 400; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-size: 13px; }
+  .step {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 0 14px;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .stage + .step { border-top: 0; }
+  .step::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    padding-top: 2px;
+  }
+  .step-body { display: grid; gap: 12px; max-width: 76ch; min-width: 0; }
+  .step-body ul { font-size: 16px; }
+  .out { font-family: var(--sans); font-size: 13.5px; color: var(--muted); }
+  .out b { color: var(--ink); font-weight: 600; }
+  .spec {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+
+  /* Label definitions */
+  .labels {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 8px 16px;
+    margin: 0;
+    font-size: 15.5px;
+  }
+  .labels dt { font-family: var(--mono); font-size: 13px; font-weight: 500; padding-top: 2px; }
+  .labels dd { margin: 0; }
+  @media (max-width: 480px) {
+    .labels { grid-template-columns: 1fr; gap: 2px; }
+    .labels dd { margin-bottom: 8px; }
+  }
+
+  .note {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--flag);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 15.5px;
+  }
+
+  /* Pilot timeline */
+  .phases { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 720px) { .phases { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .phases { grid-template-columns: repeat(4, 1fr); } }
+  .phase {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    padding-top: 10px;
+    border-top: 2px solid var(--sup);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .phase .wk { font-family: var(--mono); font-size: 12px; color: var(--sup); font-weight: 500; }
+  .gate {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 15.5px;
+    max-width: 76ch;
+    display: grid;
+    gap: 8px;
+  }
+  .gate ul { font-size: 15.5px; }
+
+  .refs { font-size: 15px; line-height: 1.5; display: grid; gap: 8px; padding-left: 1.2em; }
+  .fine { font-family: var(--sans); font-size: 13px; color: var(--muted); }
+
+  a { color: var(--sup); }
+  :focus-visible { outline: 2px solid var(--sup); outline-offset: 2px; }
+</style>
+
+<main class="page">
+  <header class="masthead">
+    <div class="meta">
+      <span>RESEARCH PLAN · VERSION 2</span>
+      <span>EARNINGS CALL DISCLOSURE</span>
+      <span>UPDATED SEPT 13, 2026</span>
+    </div>
+    <h1>Your <span class="c">customers</span> tell a different story than your <span class="s">suppliers</span></h1>
+    <p class="dek">Counterparty contradictions and abnormal disclosure in earnings calls: measuring what managers say against benchmarks they can't control.</p>
+    <nav class="toc" aria-label="Contents">
+      <a href="#objective">Objective</a>
+      <a href="#principles">Design principles</a>
+      <a href="#signal">Core signal</a>
+      <a href="#hypotheses">Hypotheses</a>
+      <a href="#data">Data</a>
+      <a href="#method">Step by step</a>
+      <a href="#threats">Threats</a>
+      <a href="#pilot">Pilot</a>
+      <a href="#changes">Changes from v1</a>
+    </nav>
+  </header>
+
+  <section id="objective">
+    <div class="rail">Objective</div>
+    <div class="body">
+      <p class="objective">This study builds a measure of disclosure quality in earnings calls that managers cannot easily game, because its benchmark sits outside their own words. <strong>Abnormal disclosure (AD)</strong> is the part of what managers claim that departs from what their fundamentals and public information imply. <strong>Counterparty contradictions (CC)</strong> are conflicts between a firm's claims and its suppliers' or customers' claims about the same relationship. Using LLM extraction of structured claims from transcripts linked through the supply-chain network, and fixed, pre-specified rules for matching and resolution, I (1) extract claims and estimate expected disclosure, (2) score contradictions between linked firms, (3) resolve each claim against accounting and market outcomes, and (4) test whether AD predicts contradictions, what predicts being wrong, whether prices absorb contradictions at once or drift where few analysts watch both sides, and whether AD and CC predict volatility, trading activity and bad outcomes beyond tone and risk words.</p>
+      <p class="copy-note">Working title: <em>"Your Customers Tell a Different Story: Counterparty Contradictions and Abnormal Disclosure in Earnings Calls."</em></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail">Motivation</div>
+    <div class="body prose">
+      <p>Dictionary-based tone and risk measures are losing power because managers now write for machine readers. They avoid flagged words, emphasize minor risks to crowd out major ones, and rehearse their Q&amp;A answers. Any measure built only on a manager's own words can be gamed by that manager.</p>
+      <p>This design uses two outside benchmarks. <strong>AD</strong> judges each claim against what the firm's circumstances imply, the way the Jones model judges accruals against what sales and assets imply. <strong>CC</strong> judges it against what a supplier or customer says about the same relationship, which the focal manager can't script. Both are then checked against what actually happened.</p>
+    </div>
+  </section>
+
+  <section id="principles">
+    <div class="rail">Design principles</div>
+    <div class="body">
+      <p class="prose">The pipeline is built for one researcher. Every choice favors reproducibility and auditability over sophistication.</p>
+      <ul class="principles">
+        <li><b>The benchmark is never the manager's own words.</b> Claims are resolved with accounting and market data. Later manager statements are a last-resort fallback and can never clear a claim.</li>
+        <li><b>Fixed rules over LLM judgment.</b> The LLM has one job: extracting literal claims, checked against a hand-labeled gold set. Date conversion, counterparty matching, contradiction scoring and resolution are done in code.</li>
+        <li><b>Settle ambiguity at the earliest point.</b> Horizon, counterparty and comparison basis are captured at extraction, then normalized in code right away, not in later steps.</li>
+        <li><b>Write it down before looking at returns.</b> The claim gate, dimensions, mapping table, resolution rules, check dates, moderators and main specifications are all fixed in advance.</li>
+        <li><b>Every number traces back to a quote.</b> Each claim carries its transcript, turn, verbatim span, model and prompt version.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="signal">
+    <div class="rail">The core signal</div>
+    <div class="body">
+      <h2>One relationship, two calls, opposite claims</h2>
+      <figure class="exhibit" style="margin:0">
+        <div class="exhibit-head">
+          <span><strong>Illustrative example</strong> · fictional firms and quotes</span>
+          <span class="mono">link: S → C · C is ~22% of S revenue</span>
+        </div>
+        <div class="facing">
+          <div class="side sup">
+            <div class="who"><b>SUPPLIER S</b><span>Q3 call · Oct 24</span><span>Prepared remarks · CEO</span></div>
+            <p class="quote">"<mark>Orders from our largest compute customer accelerated</mark> through the quarter, and we expect that strength to continue into Q4."</p>
+<pre class="claim">subject_scope:    anonymous_counterparty
+counterparty_ref: "largest compute customer" → C
+dimension:        orders_backlog
+direction:        +2
+horizon_text:     "into Q4"  (fiscal_quarter)
+comparison_basis: sequential
+hedge:            0</pre>
+          </div>
+          <div class="side cus">
+            <div class="who"><b>CUSTOMER C</b><span>Q3 call · Oct 30</span><span>Q&amp;A · CFO, prompted</span></div>
+            <p class="quote">"We're working down component inventory this quarter and next, so <mark>purchases will run below our consumption rate</mark>."</p>
+<pre class="claim">subject_scope:    own
+dimension:        capex_procurement
+direction:        −1
+horizon_text:     "this quarter and next"  (relative)
+comparison_basis: unspecified
+hedge:            0
+(+ a second claim: inventory_own, −1)</pre>
+          </div>
+        </div>
+        <div class="verdict">
+          <span class="pill">LEVEL CONTRADICTION</span>
+          <span><span class="k">Rule</span> orders_backlog ↔ capex_procurement · same sign expected · lag 0</span>
+          <span><span class="k">Dated</span> Oct 30, the later call</span>
+          <span><span class="k">Resolved with</span> C's implied purchases and inventory, first-reported</span>
+        </div>
+      </figure>
+
+      <div class="measures">
+        <div class="measure">
+          <span class="tag">MEASURE 1 · every firm</span>
+          <h3>Abnormal disclosure (AD)</h3>
+          <div class="formula">AD<sub>i,t,d</sub> = D<sub>i,t,d</sub> − E[ D<sub>i,t,d</sub> | I<sub>i,t</sub> ]</div>
+          <p>For firm <span class="mono">i</span>, quarter <span class="mono">t</span> and dimension <span class="mono">d</span>, the gap between what was claimed and what the public information set implies. Signed: positive means rosier than the circumstances warrant.</p>
+        </div>
+        <div class="measure">
+          <span class="tag">MEASURE 2 · linked firms</span>
+          <h3>Counterparty contradiction (CC)</h3>
+          <div class="formula">CC<sub>i,t</sub> = Σ<sub>j</sub> w<sub>ij</sub> · Level<sub>ij,t</sub></div>
+          <p><span class="mono">Level</span> = 1 when mapped claims about the same target quarter move against the sign the mapping table expects. Weighted by revenue share <span class="mono">w</span>. Timing contradictions, silence and evasion are tracked as separate variables.</p>
+        </div>
+      </div>
+      <p class="prose"><span><strong>How they fit together:</strong> CC is the sharp external test but exists only where supply-chain links are observed. AD covers every firm but depends on a model. If AD built <em>without</em> counterparty information predicts CC, AD is validated and can be used for firms with no visible counterparties.</span></p>
+    </div>
+  </section>
+
+  <section id="hypotheses">
+    <div class="rail">Questions &amp; hypotheses</div>
+    <div class="body">
+      <div class="rqs">
+        <div class="rq">
+          <span class="id">RQ1</span>
+          <div class="txt">
+            <p><strong>Measurement.</strong> Can abnormal disclosure be measured reliably, and does it predict counterparty contradictions?</p>
+            <p class="h"><b>H1</b> AD estimated without counterparty data is positively associated with CC in the same quarter.</p>
+          </div>
+        </div>
+        <div class="rq">
+          <span class="id">RQ2</span>
+          <div class="txt">
+            <p><strong>Who is wrong.</strong> When linked firms contradict each other, which claims do later outcomes refute?</p>
+            <p class="h"><b>H2</b> Claims later resolved as wrong (Tier A evidence) come from firms with higher positive AD, stronger incentives to spin (missed consensus, upcoming equity issuance, insider selling) and a weaker credibility record.</p>
+          </div>
+        </div>
+        <div class="rq">
+          <span class="id">RQ3</span>
+          <div class="txt">
+            <p><strong>Pricing.</strong> Do prices absorb contradictions when they become observable, or drift?</p>
+            <p class="h"><b>H3a</b> <em>Descriptive, uses the later outcome on purpose.</em> The stock of the firm eventually resolved as wrong drifts toward the outcome after the later call instead of adjusting at once.</p>
+            <p class="h"><b>H3b</b> <em>Tradable, uses only information available at the later call.</em> Firms with high predicted wrongness earn negative abnormal returns. The effect is stronger when fewer of the firm's analysts also cover the counterparty, and when no analyst on the later call raised the counterparty.</p>
+          </div>
+        </div>
+        <div class="rq">
+          <span class="id">RQ4</span>
+          <div class="txt">
+            <p><strong>Activity &amp; risk.</strong> Do AD and CC predict volatility, trading activity and bad outcomes beyond tone and risk words?</p>
+            <p class="h"><b>H4</b> AD and CC predict post-call realized volatility, abnormal volume, next-quarter earnings misses, guidance cuts and crash risk, controlling for dictionary tone and risk-word counts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="data">
+    <div class="rail">Data</div>
+    <div class="body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Need</th><th>Source</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Transcripts</td><td>LSEG StreetEvents, S&amp;P Capital IQ or FactSet (check WRDS access)</td><td>Needs speaker labels and a prepared remarks / Q&amp;A split. Location and format of your copy still to confirm.</td></tr>
+            <tr><td>Supply-chain links</td><td>Compustat Segments customer file; FactSet Revere if available; counterparties named in transcripts and 10-Ks</td><td>ASC 280 requires disclosing customers above 10% of revenue, mostly annually and often unnamed ("Customer A").</td></tr>
+            <tr><td>Fundamentals</td><td>Compustat quarterly; point-in-time or as-first-reported values where available</td><td>Inventory, COGS, sales, capex, fiscal year-ends. First-reported values keep resolution reproducible.</td></tr>
+            <tr><td>High-frequency outcomes</td><td>Monthly revenue reports from Taiwan-listed firms; WSTS / SIA industry billings; BLS producer price index; memory prices</td><td>Faster resolution for part of the chain. Memory price series are often paid.</td></tr>
+            <tr><td>Analysts</td><td>I/B/E/S detail history</td><td>Analyst IDs per estimate (for overlap), consensus, management guidance, actuals.</td></tr>
+            <tr><td>Market</td><td>CRSP daily; OptionMetrics (optional)</td><td>Returns, volume, realized and implied volatility.</td></tr>
+            <tr><td>Incentives</td><td>Form 4 insider trades; equity issuance (SDC or EDGAR S-3 / 424B)</td><td>For H2.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose"><span><strong>Sample:</strong> Russell 1000 firms with at least one observed supply-chain link, 2010–2025. <strong>Pilot:</strong> the semiconductor and hardware supply chain, 2018–2025, which includes the 2022–23 inventory correction, when suppliers and customers had strong reasons to describe demand differently.</span></p>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="rail">Method</div>
+    <div class="body">
+      <h2>Step by step</h2>
+      <ol class="steps">
+
+        <li class="stage">Build the data <span>Rules, network, transcripts</span></li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Write the rule book before touching the data</h3>
+            <p>One document, committed to git with a date, that fixes every decision later steps depend on:</p>
+            <ul>
+              <li>The claim gate, dimension list, direction convention and hedge levels (step 04)</li>
+              <li>The mapping table with expected sign and lag (step 09)</li>
+              <li>The resolution rules, evidence order and check dates (step 11)</li>
+              <li>Moderator definitions and main regression specifications (steps 13–14)</li>
+            </ul>
+            <p>Extraction prompts may be revised on the development set. Specifications may not change once return data has been examined; any later change is logged with its reason and reported.</p>
+            <p class="out"><b>Output:</b> <span class="mono">rulebook_v1</span>, timestamped.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Build the supply-chain network</h3>
+            <ul>
+              <li>Match Compustat customer-segment names to firm identifiers with fuzzy matching plus manual review. Budget real time for this.</li>
+              <li>Add counterparties named in transcripts and 10-Ks ("our foundry partner").</li>
+              <li>Keep two tiers of links: <em>named</em> (firm to firm) and <em>end-market</em> (firm to "hyperscaler demand", "smartphone OEMs").</li>
+              <li>Pull each firm's fiscal year-end history from Compustat. Fiscal quarters differ across the chain, so calendar conversion depends on it.</li>
+            </ul>
+            <p class="out"><b>Output:</b> directed supplier → customer edges by quarter, with revenue share <span class="mono">w<sub>ij</sub></span> where known, plus a fiscal calendar table.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Preprocess transcripts</h3>
+            <ul>
+              <li>Split each call into prepared remarks and Q&amp;A; tag speaker roles (CEO, CFO, other executive, analyst, operator).</li>
+              <li>Split long prepared-remarks turns at paragraph breaks so each unit stays short.</li>
+              <li>Pair every analyst question with its answer, and flag <code>question_mentions_counterparty</code> when the question names or refers to a linked firm.</li>
+            </ul>
+            <p class="out"><b>Output:</b> turn-level records with transcript ID, call date, section, speaker, turn index, linked question, and fiscal year-end.</p>
+          </div>
+        </li>
+
+        <li class="stage">Extract claims <span>One LLM job, validated</span></li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Write the codebook and build the gold set</h3>
+            <p><strong>Claim gate.</strong> A statement is a claim only if it answers all three: <em>about what</em> (a linked dimension), <em>which way</em> (a direction), <em>when</em> (a horizon). It must also be something later data could show to be wrong. Everything else is a rejected candidate with a reason code: <code>no_direction</code>, <code>no_horizon</code>, <code>reported_fact</code>, <code>boilerplate</code>.</p>
+            <h4>Dimensions (fixed)</h4>
+            <div class="table-wrap">
+              <table class="narrow">
+                <thead><tr><th>Dimension</th><th>Covers</th></tr></thead>
+                <tbody>
+                  <tr><td><code>end_demand</code></td><td>Demand for the firm's or customer's end products and markets</td></tr>
+                  <tr><td><code>orders_backlog</code></td><td>Orders, bookings, backlog, book-to-bill</td></tr>
+                  <tr><td><code>inventory_own</code></td><td>The firm's own inventory</td></tr>
+                  <tr><td><code>inventory_downstream</code></td><td>Channel, distributor or customer inventory; digestion; double-ordering</td></tr>
+                  <tr><td><code>selling_price</code></td><td>The firm's own prices and ASPs</td></tr>
+                  <tr><td><code>input_cost</code></td><td>Prices the firm pays for components and materials</td></tr>
+                  <tr><td><code>capacity_supply</code></td><td>Capacity, utilization, lead times, allocation, shortages</td></tr>
+                  <tr><td><code>capex_procurement</code></td><td>Capital spending and purchasing plans</td></tr>
+                  <tr><td><code>margin</code></td><td>Gross or operating margin (used for AD only)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <ul>
+              <li><strong>Direction</strong> is a 5-point ordinal (−2 to +2) for the <em>change</em> in the variable over the target period, not its level. "Inventory is elevated" is not a direction; "we're working inventory down" is −1.</li>
+              <li><strong>Hedge</strong> is ordinal: 0 plain assertion, 1 qualified ("we expect"), 2 heavily hedged ("could see some softness"). Hedged claims are kept, never dropped.</li>
+              <li><strong>Extract literally.</strong> "Adding a second shift" is a capacity claim; any demand implication is left to the mapping step.</li>
+              <li><strong>Always keep</strong> denials ("we're not seeing double-ordering") and conditional claims, with the condition recorded.</li>
+            </ul>
+            <p><strong>Gold set.</strong> Sample turns, oversampling those that touch linked dimensions. Hand-code about 100 turns as a development set and a similar-sized held-out test set. For the paper, a second coder labels 300–500 claims and agreement is reported as Cohen's kappa.</p>
+            <p class="out"><b>Output:</b> codebook, development set, held-out set.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Extract claims</h3>
+            <ul>
+              <li>One structured-output LLM call per turn. Q&amp;A answers are sent with the analyst's question. The call date and fiscal year-end are included as context.</li>
+              <li>Temperature 0, pinned model ID, versioned prompt, with 4–5 examples covering the hard cases: denial, heavy hedge, fiscal-quarter reference, evasion.</li>
+              <li>The LLM does not convert dates, resolve counterparties or report its own confidence.</li>
+            </ul>
+<pre class="spec">{
+  "transcript_id": "S_FY2024Q3_call",
+  "call_date": "2024-10-24",
+  "turn_index": 47,
+  "segment": "qa",
+  "speaker_role": "CEO",
+  "question_turn_index": 46,
+  "source_text": "[verbatim turn]",
+  "run": { "model": "…", "prompt_version": "extract_v1", "temperature": 0 },
+
+  "claims": [{
+    "span": "[exact supporting quote]",
+    "subject_scope": "anonymous_counterparty",   // own | named_counterparty | anonymous_counterparty | end_market | industry
+    "counterparty_ref": "our largest compute customer",
+    "dimension": "orders_backlog",
+    "direction": 2,                               // −2 … +2, change over target period
+    "horizon_text": "into Q4",
+    "horizon_ref": "fiscal_quarter",              // fiscal_quarter | calendar | relative | unspecified
+    "comparison_basis": "sequential",             // sequential | year_over_year | unspecified
+    "hedge": 0,                                   // 0 | 1 | 2
+    "quantified": false, "quant_value": null, "quant_unit": null,
+    "is_denial": false,
+    "condition": null
+  }],
+
+  "rejected_candidates": [
+    { "span": "…", "dimension": "end_demand", "reason": "no_direction" }
+  ]
+}</pre>
+            <p class="out"><b>Output:</b> claim table and rejected-candidate table, one row per claim, each traceable to its quote.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Validate before going further</h3>
+            <ul>
+              <li>Tune the prompt on the development set only. Score once on the held-out set.</li>
+              <li>Pass bar on the held-out set: dimension accuracy ≥ 85%, direction accuracy ≥ 80%, and opposite-sign errors (up read as down) reported separately and kept rare (for example ≤ 5%). These drive false contradictions.</li>
+              <li>Report recall, not just precision. The silence measure in step 10 is only as good as recall.</li>
+              <li>Below the bar: fix the prompt. Don't move on to matching.</li>
+              <li>In production, rerun a random sample of turns and report how often the runs agree.</li>
+            </ul>
+            <p class="out"><b>Output:</b> validation report by field and dimension.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Normalize in code</h3>
+            <ul>
+              <li>Convert <code>horizon_text</code> + <code>horizon_ref</code> to calendar <code>target_start</code> and <code>target_end</code> using the call date and fiscal calendar. "Second half" becomes a two-quarter range, not one quarter.</li>
+              <li>Resolve <code>counterparty_ref</code> to a firm ID using the network and revenue-concentration disclosures. Unresolved references stay at the end-market tier.</li>
+              <li>Remove duplicate claims within a call, keeping <code>repeat_count</code> and <code>qa_softer_than_script</code> (the Q&amp;A version is weaker than the prepared remarks).</li>
+            </ul>
+            <p class="out"><b>Output:</b> normalized claim table, the single source of truth for everything after.</p>
+          </div>
+        </li>
+
+        <li class="stage">Measure <span>AD, contradictions, silence</span></li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Estimate expected disclosure and compute AD</h3>
+            <ul>
+              <li><strong>(a) Regression baseline.</strong> For each dimension, regress firm-quarter disclosure (net direction, emphasis share, hedging rate, quantification rate) on the information set: earnings surprise, sales growth, inventory change, margin change, guidance change, quarter return, peers' same-quarter disclosure and firm fixed effects. Estimate by industry-quarter on past data only. The residual is AD.</li>
+              <li><strong>(b) LLM counterfactual.</strong> Give an LLM an anonymized information packet and have it produce the claims an unbiased manager would make, in the same schema. Compare with actual claims.</li>
+              <li>Two versions: <strong>AD<sup>no-cp</sup></strong> without counterparty information (for H1 and H3b) and <strong>AD<sup>full</sup></strong> with it (for H4).</li>
+            </ul>
+            <p class="out"><b>Output:</b> signed AD by firm, quarter and dimension.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Match claims and score contradictions</h3>
+            <p>Build aggregated views from the claim table at the (firm, subject, dimension, target quarter) level, keeping hedge and section. Then compare linked cells with a fixed mapping table, not an LLM judge:</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Supplier dimension</th><th>Customer dimension</th><th>Expected</th><th>Allowed lag</th></tr></thead>
+                <tbody>
+                  <tr><td><code>inventory_downstream</code></td><td><code>inventory_own</code></td><td class="same">same sign</td><td class="nw">0 (same inventory)</td></tr>
+                  <tr><td><code>selling_price</code></td><td><code>input_cost</code></td><td class="same">same sign</td><td class="nw">0</td></tr>
+                  <tr><td><code>orders_backlog</code></td><td><code>capex_procurement</code></td><td class="same">same sign</td><td class="nw">0</td></tr>
+                  <tr><td><code>orders_backlog</code></td><td><code>end_demand</code></td><td class="same">same sign</td><td class="nw">0–1 quarter</td></tr>
+                  <tr><td><code>capacity_supply</code></td><td><code>capacity_supply</code></td><td class="same">same sign</td><td class="nw">0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <ul>
+              <li><strong>Level contradiction:</strong> directions disagree with the expected sign for overlapping target quarters.</li>
+              <li><strong>Timing contradiction:</strong> directions agree but the move falls outside the allowed lag. Often honest bullwhip effects, so kept separate.</li>
+              <li>Compare claims with the same subject only. A supplier's claim about total demand is not matched against one customer's purchasing.</li>
+              <li>Heavily hedged claims (hedge = 2) are excluded from level-contradiction scoring but count for AD.</li>
+            </ul>
+            <p class="out"><b>Output:</b> CC by link-quarter and firm-quarter, dated at the <em>later</em> call.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Detect silence and evasion</h3>
+            <ul>
+              <li><strong>Silence:</strong> the counterparty has a claim in a linked (dimension, quarter) cell and the focal firm has none. A fixed rule run after extraction, reported with the extractor's recall.</li>
+              <li><strong>Evasion:</strong> an analyst asked about a linked dimension and the answer produced no claim (only rejected candidates, or nothing). This is kept separate from silence and is likely the stronger signal.</li>
+            </ul>
+            <p class="out"><b>Output:</b> silence and evasion counts by firm, dimension and quarter.</p>
+          </div>
+        </li>
+
+        <li class="stage">Resolve <span>Score each claim against outcomes</span></li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Resolve each claim with an evidence hierarchy</h3>
+            <p>Each side's claim is scored against its own outcome; no winner is picked per pair. Evidence is used in a fixed order by dimension. Manager statements can never clear a claim.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Dimension</th><th>Tier A: hard data</th><th>Tier B: indirect proxy</th></tr></thead>
+                <tbody>
+                  <tr><td><code>orders_backlog</code></td><td>Backlog or remaining performance obligations; the counterparty's implied purchases; actuals vs. guidance given at the call</td><td>Supplier total or segment revenue</td></tr>
+                  <tr><td><code>capex_procurement</code></td><td>Capex (year-to-date, differenced); purchase obligations; implied purchases</td><td>Supplier revenue</td></tr>
+                  <tr><td><code>inventory_own</code></td><td>Balance-sheet inventory, days inventory</td><td>—</td></tr>
+                  <tr><td><code>inventory_downstream</code></td><td>The counterparty's inventory; distributor inventories</td><td>Industry billings data</td></tr>
+                  <tr><td><code>end_demand</code></td><td>Revenue vs. guidance given at the call; monthly revenue where reported</td><td>Industry billings and shipment data</td></tr>
+                  <tr><td><code>selling_price</code>, <code>input_cost</code></td><td>Producer price index; memory spot and contract prices</td><td>Gross margin change</td></tr>
+                  <tr><td><code>capacity_supply</code></td><td>Capex</td><td>Disclosed utilization; lead-time surveys</td></tr>
+                  <tr><td><code>margin</code></td><td>Gross margin from reported sales and COGS</td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+<pre class="spec">Implied purchases_t = COGS_t + Inventory_t − Inventory_(t−1)</pre>
+            <h4>Decision rules</h4>
+            <ul>
+              <li><strong>Direction:</strong> realized change is measured on the claim's comparison basis (default: sequential), minus the firm's average change in the same fiscal quarter over the prior 3–5 years, then binned into the same −2 to +2 scale using the firm's own history.</li>
+              <li><strong>No-call zone:</strong> a realized change within one standard deviation of the firm's normal seasonal change counts as flat.</li>
+              <li><strong>Best tier wins:</strong> use the highest tier available. If that tier has two or more signals and they disagree, the label is <code>conflicted</code>.</li>
+              <li><strong>Check date, fixed:</strong> when first-reported numbers for <code>target_end</code> are out, plus one more quarter so late moves can be labeled.</li>
+            </ul>
+            <h4>Labels per claim</h4>
+            <dl class="labels">
+              <dt>right</dt><dd>Realized direction has the claimed sign</dd>
+              <dt>wrong</dt><dd>Realized direction has the opposite sign (the H2 outcome)</dd>
+              <dt>flat</dt><dd>Realized change inside the no-call zone</dd>
+              <dt>early / late</dt><dd>Move matched the claim one quarter off the target</dd>
+              <dt>conflicted</dt><dd>Signals within the best tier disagree</dd>
+              <dt>unresolved</dt><dd>No Tier A or B evidence</dd>
+            </dl>
+            <ul>
+              <li><strong>Tiers:</strong> A = hard data on the dimension and horizon (main H2 test); B = indirect proxy; C = only later manager statements, retrieved and quoted by an LLM, reviewed by a person, robustness only.</li>
+              <li><strong>Pair outcomes:</strong> when both sides of a level contradiction are resolved as right, it was a <em>false contradiction</em>. That rate is reported as a validity check on CC.</li>
+              <li>Report how resolved claims differ from unresolved ones (size, quantification, dimension).</li>
+            </ul>
+            <p class="out"><b>Output:</b> a resolution table with label, tier and evidence used for every claim.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Build the credibility record</h3>
+            <p>For each firm on each call date: the share of its past claims labeled wrong, counting only claims whose check date came <em>before</em> that call. Shrink toward the sample average when a firm has few resolved claims.</p>
+            <p class="out"><b>Output:</b> a real-time credibility score, usable in H2 and H3b without look-ahead.</p>
+          </div>
+        </li>
+
+        <li class="stage">Test <span>Moderators, hypotheses, robustness</span></li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Build the H3 moderators</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Role</th><th>Variable</th><th>Definition</th></tr></thead>
+                <tbody>
+                  <tr><td>Main</td><td class="nw">Analyst overlap</td><td>Share of firm <span class="mono">i</span>'s analysts who also cover counterparty <span class="mono">j</span>, from I/B/E/S detail estimates in the 12 months before the later call. Measured from <span class="mono">i</span>'s side, because H3 is about <span class="mono">i</span>'s price.</td></tr>
+                  <tr><td>Main</td><td class="nw">Cross-reference</td><td>An analyst on the later call asked about the counterparty or its statements (<code>question_mentions_counterparty</code>).</td></tr>
+                  <tr><td>Control</td><td class="nw">Call gap</td><td>Days between the two calls, and which firm reported second. Mostly driven by fixed fiscal calendars, so used with pair fixed effects.</td></tr>
+                  <tr><td>Robustness</td><td class="nw">Alternatives</td><td>Jaccard overlap; 90-day window; shared broker; any-overlap indicator.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>All moderators are built and reported, whatever they show. Controls: each firm's analyst count, revenue share, size, institutional ownership, same-industry indicator, link type.</p>
+            <p class="out"><b>Output:</b> moderator panel by link-quarter.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Test the hypotheses</h3>
+<pre class="spec">H1   CC_i,t          = a + b·AD_nocp_i,t + controls + FE(firm, quarter)
+
+H2   Wrong_claim     = a + b1·AD_nocp + b2·Incentive + b3·Credibility + FE(pair)
+     (LPM / logit, Tier A; full sample as robustness)
+
+H3a  CAR of eventually-wrong firm over [t+2, t+60] vs. matched controls
+     (descriptive: how fast prices reach the outcome)
+
+H3b  CAR_i,[t+2,t+60] = a + b1·PredWrong_i,t
+                        + b2·PredWrong × Overlap + b3·PredWrong × CrossRef
+                        + gap controls + controls + FE(industry × quarter)
+     PredWrong: H2 model re-estimated on an expanding window, past data only
+     also: counterparty's abnormal return on the later call day;
+           calendar-time portfolios, FF5 + momentum alphas
+
+H4   Y_i,t+k         = a + b1·AD_full_i,t + b2·CC_i,t + tone + LM risk words + controls
+     Y ∈ { realized vol [t+1,t+5], abnormal volume, ΔIV, SUE_t+1,
+           guidance cut, NCSKEW_t+1 }</pre>
+            <p>Controls: size, book-to-market, momentum, earnings surprise, dictionary tone, risk-word counts, and customer return momentum (following Cohen &amp; Frazzini) so CC isn't just picking up known return lags along supply chains. Use continuous moderators in regressions; high/low splits for plots only.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-body">
+            <h3>Robustness</h3>
+            <ul>
+              <li><strong>Placebo:</strong> random same-industry pairs with no economic link. CC should not predict outcomes.</li>
+              <li><strong>Look-ahead bias in the LLM:</strong> strip names and dates, use a model whose training data ends before the test period, and test whether it can guess the firm from the packet.</li>
+              <li><strong>Measurement:</strong> rerun on hand-coded claims only, and with alternative prompts and models.</li>
+              <li><strong>Scope:</strong> named links only; level contradictions only; Tier A only vs. all tiers.</li>
+              <li><strong>Identification (full sample, if events exist):</strong> broker closures and mergers that remove a shared analyst.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="threats">
+    <div class="rail">Threats</div>
+    <div class="body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Threat</th><th>Why it matters</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Honest disagreement</td><td>Firms see the chain from different positions; suppliers feel swings later (bullwhip)</td><td>Separate timing from level contradictions; same-subject matching; report the false-contradiction rate</td></tr>
+            <tr><td>Manager-controlled resolution</td><td>If later manager talk decides who was right, consistent spin is never caught</td><td>Evidence hierarchy; manager statements are Tier C only and never clear a claim</td></tr>
+            <tr><td>Disclosure bias in resolution</td><td>Firms that disclose more are easier to label wrong</td><td>Record unresolved claims; compare resolved and unresolved; control for disclosure richness</td></tr>
+            <tr><td>Look-ahead in H3</td><td>"Who was wrong" is only known later</td><td>H3a (descriptive) vs. H3b (predicted wrongness, past data only)</td></tr>
+            <tr><td>Fiscal calendars</td><td>"Q4" means different months for different firms</td><td>Conversion in code from Compustat fiscal year-ends; horizon ranges</td></tr>
+            <tr><td>Anonymous customers</td><td>"A large customer" can't always be matched</td><td>Two link tiers; resolve via concentration disclosures</td></tr>
+            <tr><td>LLM extraction error</td><td>Noise weakens results; opposite-sign errors create false contradictions</td><td>Held-out validation, sign errors reported separately, second coder, run logging</td></tr>
+            <tr><td>LLM look-ahead</td><td>The model may "know" what happened next</td><td>Anonymization, pre-sample training cutoff, firm-identification test</td></tr>
+            <tr><td>Mechanical correlation</td><td>Fundamentals in E[D | I] also predict outcomes</td><td>Expected model on past data only; same fundamentals as controls</td></tr>
+            <tr><td>Forking paths</td><td>Choosing measures after seeing results inflates false positives</td><td>Rule book fixed in step 01; all moderators reported</td></tr>
+            <tr><td>Overlap is not random</td><td>Analysts cover both firms when links are important and firms similar</td><td>Controls for analyst counts, revenue share, size, industry and link type; broker-closure events if available</td></tr>
+            <tr><td>Link coverage</td><td>Observed links tilt toward large firms</td><td>Report coverage; use validated AD for unlinked firms</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="pilot">
+    <div class="rail">Pilot</div>
+    <div class="body">
+      <h2>Eight weeks on the semiconductor chain</h2>
+      <div class="phases">
+        <div class="phase"><span class="wk">WEEKS 1–2</span><strong>Rules &amp; data</strong><span>Rule book v1. About 40 firms, 2018–2025: links, fiscal calendars, turn splitter, Q&amp;A pairs.</span></div>
+        <div class="phase"><span class="wk">WEEKS 3–4</span><strong>Claims</strong><span>Gold sets, extraction prompt, held-out validation report.</span></div>
+        <div class="phase"><span class="wk">WEEKS 5–6</span><strong>Contradictions</strong><span>Normalization, mapping, CC scores, silence and evasion; hand-check the top 50.</span></div>
+        <div class="phase"><span class="wk">WEEKS 7–8</span><strong>First evidence</strong><span>Tier A resolution, false-contradiction rate, overlap measures, descriptive return and volatility plots.</span></div>
+      </div>
+      <div class="gate">
+        <p><strong>Decision gate before scaling</strong></p>
+        <ul>
+          <li>Extraction passes the held-out bar (dimension ≥ 85%, direction ≥ 80%, opposite-sign errors rare).</li>
+          <li>Enough level contradictions to test, for example 20 or more across the pilot chain.</li>
+          <li>Most flagged contradictions are real: false-contradiction rate well below half.</li>
+          <li>A meaningful share of claims resolvable at Tier A.</li>
+        </ul>
+        <p>If contradictions are rare, shift the paper's weight to AD and use CC as validation. The pilot is too small for the H3 moderator tests; treat those results as descriptive.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail">Contribution</div>
+    <div class="body prose">
+      <ul>
+        <li>An <strong>external benchmark</strong> for disclosure quality that the disclosing manager can't control.</li>
+        <li>The <strong>logic of abnormal accruals applied to narrative disclosure</strong>, at the level of individual claims rather than document tone.</li>
+        <li>A <strong>credibility record</strong> for managers, built from resolved claims and available in real time.</li>
+        <li>Evidence on <strong>limited attention along economic links</strong>: do investors read both sides of a relationship?</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="changes">
+    <div class="rail">Changes from v1</div>
+    <div class="body prose">
+      <ul>
+        <li>Contradictions are scored with a fixed mapping table (expected sign and lag) instead of an LLM judge.</li>
+        <li>Claims pass an explicit gate; the schema adds counterparty scope, comparison basis, horizon ranges, ordinal hedging, denials and rejected candidates.</li>
+        <li>Fiscal-to-calendar conversion and counterparty matching moved from the LLM into code.</li>
+        <li>Resolution uses an evidence hierarchy by dimension with fixed check dates and first-reported data. The LLM no longer drafts labels, and manager statements can't clear a claim.</li>
+        <li>H3 is split into H3a and H3b to remove look-ahead; a credibility record is added.</li>
+        <li>Analyst overlap is measured from the focal firm's side; a transcript cross-reference moderator is added; all moderators are fixed in advance.</li>
+        <li>A rule book is written before any data work.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail">Key references</div>
+    <div class="body">
+      <ol class="refs">
+        <li>Jones (1991), <em>Journal of Accounting Research</em>; Dechow, Sloan &amp; Sweeney (1995), <em>The Accounting Review</em>: expected vs. discretionary accruals</li>
+        <li>Huang, Teoh &amp; Zhang (2014), "Tone Management," <em>The Accounting Review</em>: abnormal tone as a residual</li>
+        <li>Cohen &amp; Frazzini (2008), "Economic Links and Predictable Returns," <em>Journal of Finance</em></li>
+        <li>Ali &amp; Hirshleifer (2020), "Shared Analyst Coverage," <em>Journal of Financial Economics</em></li>
+        <li>Hong &amp; Kacperczyk (2010), <em>Quarterly Journal of Economics</em>; Kelly &amp; Ljungqvist (2012), <em>Review of Financial Studies</em>: broker mergers and closures as coverage shocks</li>
+        <li>Loughran &amp; McDonald (2011), <em>Journal of Finance</em>: finance-specific word lists</li>
+        <li>Cao, Jiang, Yang &amp; Zhang (2023), "How to Talk When a Machine Is Listening," <em>Review of Financial Studies</em></li>
+        <li>Hassan, Hollander, van Lent &amp; Tahoun (2019), <em>Quarterly Journal of Economics</em>: firm-level exposure from calls</li>
+        <li>Gow, Larcker &amp; Zakolyukina (2021), "Non-Answers During Conference Calls," <em>Journal of Accounting Research</em></li>
+        <li>Hutton, Marcus &amp; Tehranian (2009); Kim, Li &amp; Zhang (2011): opacity and crash risk</li>
+      </ol>
+      <p class="fine">Citations are listed from memory. Verify titles, years and venues, confirm data access through WRDS, and run a novelty search on counterparty contradictions before writing.</p>
+    </div>
+  </section>
+</main>
+
+</body></html>

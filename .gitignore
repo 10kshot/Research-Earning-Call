@@ -1,0 +1,9 @@
+# Licensed data (WRDS, transcripts) stays local; only folder skeletons are tracked.
+data/raw/*
+data/interim/*
+data/processed/*
+!data/*/.gitkeep
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
