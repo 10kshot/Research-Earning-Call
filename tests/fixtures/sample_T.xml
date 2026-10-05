@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Event Id="1" lastUpdate="x" eventTypeId="1" eventTypeName="Earning Conference Call/Presentation">
+  <EventStory Id="1.T" action="publish" storyType="transcript" version="Final">
+    <Headline><![CDATA[Edited Transcript of TEST earnings conference call]]></Headline>
+    <Body><![CDATA[Q3 2016 Test Semi Corp Earnings Call
+
+================================================================================
+Corporate Participants
+================================================================================
+   *  Jane Doe
+      Test Semi Corp - CEO
+   *  John Roe
+      Test Semi Corp - CFO
+
+================================================================================
+Conference Call Participants
+================================================================================
+   *  Ann Lee
+      Big Bank &amp; Co. - Analyst
+
+================================================================================
+Presentation
+--------------------------------------------------------------------------------
+Operator   [1]
+--------------------------------------------------------------------------------
+ Welcome to the call.
+--------------------------------------------------------------------------------
+ Jane Doe,  Test Semi Corp - CEO   [2]
+--------------------------------------------------------------------------------
+ Orders from our largest customer accelerated.
+ We expect that strength to continue into Q4.
+
+================================================================================
+Questions and Answers
+--------------------------------------------------------------------------------
+ Ann Lee,  Big Bank &amp; Co. - Analyst   [3]
+--------------------------------------------------------------------------------
+ How is channel inventory?
+--------------------------------------------------------------------------------
+ John Roe,  Test Semi Corp - CFO   [4]
+--------------------------------------------------------------------------------
+ Channel inventory is coming down this quarter.
+--------------------------------------------------------------------------------
+Operator   [5]
+--------------------------------------------------------------------------------
+ That concludes the call.
+]]></Body>
+  </EventStory>
+  <eventTitle><![CDATA[Q3 2016 Test Semi Corp Earnings Call]]></eventTitle>
+  <city>Austin</city>
+  <companyName>Test Semi Corp</companyName>
+  <companyTicker>TSC</companyTicker>
+  <startDate>24-Oct-16 9:00pm GMT</startDate>
+</Event>

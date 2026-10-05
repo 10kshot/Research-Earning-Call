@@ -112,5 +112,31 @@ class ResolutionTest(unittest.TestCase):
         self.assertAlmostEqual(credibility_score(["wrong"] * 10, 0.2), 0.6)
 
 
+
+class TranscriptTest(unittest.TestCase):
+    def test_parse_fixture(self):
+        from pathlib import Path
+        from ccad.transcripts import parse_file
+
+        call, turns = parse_file(Path(__file__).parent / "fixtures" / "sample_T.xml")
+        self.assertEqual((call["call_date"], call["company_ticker"], call["has_qa"]), ("2016-10-24", "TSC", True))
+        by_n = {t["turn_index"]: t for t in turns}
+        self.assertEqual([by_n[n]["speaker_role"] for n in range(1, 6)],
+                         ["operator", "CEO", "analyst", "CFO", "operator"])
+        self.assertEqual(by_n[2]["text"], "Orders from our largest customer accelerated.\nWe expect that strength to continue into Q4.")
+        self.assertEqual(by_n[3]["speaker_desc"], "Big Bank & Co. - Analyst")
+        self.assertEqual(by_n[4]["question_turn_index"], 3)
+        self.assertIsNone(by_n[5]["question_turn_index"])
+
+    def test_n_turns_when_numbering_restarts_per_section(self):
+        from pathlib import Path
+        from ccad.transcripts import parse_file
+
+        call, turns = parse_file(Path(__file__).parent / "fixtures" / "restart_numbering_T.xml")
+        self.assertEqual(call["n_turns"], 5)
+        qa = {t["turn_index"]: t for t in turns if t["segment"] == "qa"}
+        self.assertEqual(qa[2]["question_turn_index"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()
